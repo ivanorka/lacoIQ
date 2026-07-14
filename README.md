@@ -34,7 +34,7 @@ Planned product domain: `millena.ai`.
 - `script.js` - navigation, onboarding, language switching and interactions
 - `PRODUCT_STRATEGY.md` - product positioning and human + AI operating model
 - `assets/lucide.min.js` - local Lucide icon runtime
-- `assets/millena-mark.svg` - Millena companion brand mark
+- `assets/millena-mark.png` - Millena companion brand mark
 - `assets/` - supporting visual assets
 
 Open `index.html` directly in a browser. The demo login establishes a local
