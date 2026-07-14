@@ -317,13 +317,16 @@ input:focus-visible {
 
 .hero-texture {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: -8%;
   width: 100%;
-  height: 100%;
+  height: 116%;
   object-fit: cover;
   opacity: 0.11;
   filter: saturate(0.7) contrast(0.9);
   pointer-events: none;
+  transform: translate3d(0, var(--parallax-offset, 0px), 0) scale(1.04);
+  will-change: transform;
 }
 
 .hero-inner {
@@ -834,19 +837,35 @@ input:focus-visible {
   background: #fff;
 }
 
-.channel-ribbon > div {
-  width: min(1180px, 100%);
+.channel-marquee {
   min-height: 82px;
-  margin: 0 auto;
-  padding: 0 24px;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px 22px;
 }
 
-.channel-ribbon > div > span {
+.channel-track {
+  width: max-content;
+  display: flex;
+  align-items: center;
+  animation: channel-flow 34s linear infinite;
+  will-change: transform;
+}
+
+.channel-marquee:hover .channel-track {
+  animation-play-state: paused;
+}
+
+.channel-set {
+  padding-right: 32px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 28px;
+  white-space: nowrap;
+}
+
+.channel-set > span {
   color: var(--subtle);
   font-size: 0.68rem;
   font-weight: 700;
@@ -875,6 +894,10 @@ input:focus-visible {
 
 .channel-ribbon svg {
   width: 16px;
+}
+
+@keyframes channel-flow {
+  to { transform: translateX(-50%); }
 }
 
 .site-section {
@@ -1157,6 +1180,122 @@ input:focus-visible {
 .bot-actions svg { width: 14px; }
 .sync-line { align-self: center; display: flex; align-items: center; gap: 7px; color: var(--subtle); font-size: 0.59rem; }
 .sync-line svg { width: 14px; color: var(--coral); }
+
+.team-section {
+  background: #fff;
+}
+
+.team-heading {
+  margin-bottom: 54px;
+  display: grid;
+  grid-template-columns: minmax(420px, 1.1fr) minmax(320px, 0.7fr);
+  align-items: end;
+  gap: 70px;
+}
+
+.team-heading h2 { margin-bottom: 0; }
+.team-heading > p { margin-bottom: 0; }
+
+.team-model {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.78fr) 76px minmax(460px, 1.22fr);
+  align-items: center;
+  gap: 18px;
+}
+
+.team-people,
+.millena-role {
+  min-height: 460px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.team-people > header,
+.millena-role > header {
+  min-height: 82px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px solid var(--line);
+}
+
+.team-people > header > span {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+.team-people > header svg { width: 17px; }
+.team-people header > div,
+.millena-role header > div { display: grid; gap: 3px; }
+.team-people header strong,
+.millena-role header strong { font-size: 0.77rem; }
+.team-people header small,
+.millena-role header small { color: var(--subtle); font-size: 0.61rem; }
+.team-member { min-height: 86px; margin: 0 18px; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 11px; border-bottom: 1px solid var(--line); }
+.team-member:last-child { border-bottom: 0; }
+.person-avatar { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; color: #fff; background: var(--ink); font-size: 0.62rem; font-weight: 800; }
+.person-avatar.blue { background: #316fa7; }
+.person-avatar.amber { background: #a56d28; }
+.team-member > div { display: grid; gap: 3px; }
+.team-member strong { font-size: 0.72rem; }
+.team-member small { color: var(--subtle); font-size: 0.61rem; }
+.team-member b { color: var(--muted); font-size: 0.58rem; font-weight: 700; }
+
+.team-connector {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  color: var(--subtle);
+  text-align: center;
+}
+
+.team-connector > span { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-2); }
+.team-connector svg { width: 17px; color: var(--coral); }
+.team-connector small { font-size: 0.54rem; line-height: 1.4; }
+
+.millena-role {
+  padding-bottom: 18px;
+  border-color: #d8cdf4;
+  background: #f8f6fd;
+}
+
+.millena-role > header { border-color: #ded7ef; }
+.millena-role > header > img { width: 42px; height: 42px; border-radius: 9px; }
+.millena-role > header > span { margin-left: auto; display: flex; align-items: center; gap: 6px; color: var(--green); font-size: 0.57rem; font-weight: 750; }
+.millena-role > header > span i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.millena-role > h3 { max-width: 570px; margin: 24px 20px 18px; font-size: 1.22rem; line-height: 1.35; }
+.agent-roster { margin: 0 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid #ded7ef; border-left: 1px solid #ded7ef; }
+.agent-roster article { min-height: 92px; padding: 13px; display: grid; grid-template-columns: 32px minmax(0, 1fr) 16px; align-items: center; gap: 9px; border-right: 1px solid #ded7ef; border-bottom: 1px solid #ded7ef; }
+.agent-roster article > span { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; color: var(--coral-dark); background: #ede7fb; }
+.agent-roster article > span svg { width: 14px; }
+.agent-roster article > div { display: grid; gap: 3px; }
+.agent-roster strong { font-size: 0.65rem; }
+.agent-roster small { color: var(--subtle); font-size: 0.55rem; line-height: 1.35; }
+.agent-roster article > svg { width: 14px; color: var(--green); }
+
+.team-principles {
+  margin-top: 42px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.team-principles article { padding-top: 18px; border-top: 2px solid var(--line); }
+.team-principles article:first-child { border-color: var(--ink); }
+.team-principles article:nth-child(2) { border-color: var(--coral); }
+.team-principles article:nth-child(3) { border-color: var(--blue); }
+.team-principles article:nth-child(4) { border-color: var(--green); }
+.team-principles span { display: block; margin-bottom: 18px; color: var(--subtle); font-size: 0.58rem; font-weight: 800; }
+.team-principles strong { display: block; margin-bottom: 7px; font-size: 0.73rem; }
+.team-principles p { margin-bottom: 0; font-size: 0.65rem; line-height: 1.5; }
 
 .studio-section {
   background: #fff;
@@ -1467,8 +1606,10 @@ input:focus-visible {
 
 .web-backdrop img {
   width: 100%;
-  height: 100%;
+  height: 120%;
   object-fit: cover;
+  transform: translate3d(0, var(--parallax-offset, 0px), 0) scale(1.06);
+  will-change: transform;
 }
 
 .web-layout {
@@ -1681,11 +1822,14 @@ input:focus-visible {
 
 .closing-section > img {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: -10%;
   width: 100%;
-  height: 100%;
+  height: 120%;
   object-fit: cover;
   opacity: 0.18;
+  transform: translate3d(0, var(--parallax-offset, 0px), 0) scale(1.05);
+  will-change: transform;
 }
 
 .closing-inner {
@@ -1926,6 +2070,7 @@ input:focus-visible {
   .workflow-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .workflow-track > svg { display: none; }
   .companion-layout { gap: 42px; }
+  .team-model { grid-template-columns: minmax(260px, 0.72fr) 58px minmax(420px, 1.28fr); gap: 12px; }
   .demo-panel[data-demo-panel="social"] { grid-template-columns: 230px minmax(390px, 1fr); }
   .demo-publish { grid-column: 1 / -1; display: grid; grid-template-columns: 120px 180px minmax(0, 1fr) 180px; align-items: center; gap: 14px; border-top: 1px solid var(--line); border-left: 0; }
   .demo-publish h3 { margin-bottom: 0; }
@@ -1956,7 +2101,8 @@ input:focus-visible {
   .hero-inner { grid-template-columns: 1fr; }
   .hero-copy { max-width: 660px; }
   .product-stage { min-height: 500px; }
-  .channel-ribbon > div { flex-wrap: wrap; justify-content: center; padding: 18px 24px; }
+  .channel-marquee { min-height: 72px; }
+  .channel-set { gap: 24px; padding-right: 28px; }
   .setup-story { grid-template-columns: 1fr; }
   .setup-story article { min-height: 220px; }
   .story-icon { margin-bottom: 32px; }
@@ -1964,6 +2110,14 @@ input:focus-visible {
   .companion-layout,
   .about-layout { grid-template-columns: 1fr; gap: 48px; }
   .companion-copy { max-width: 680px; }
+  .team-heading { grid-template-columns: 1fr; gap: 18px; }
+  .team-heading > p { max-width: 680px; }
+  .team-model { grid-template-columns: 1fr; gap: 16px; }
+  .team-connector { grid-template-columns: 42px auto; justify-content: center; align-items: center; }
+  .team-connector svg { transform: rotate(90deg); }
+  .team-people,
+  .millena-role { min-height: 0; }
+  .team-principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .demo-panel[data-demo-panel="social"],
   .demo-panel[data-demo-panel="blog"] { grid-template-columns: 1fr; }
   .demo-source,
@@ -2020,6 +2174,8 @@ input:focus-visible {
   .bot-message { max-width: 94%; }
   .companion-demo > header { align-items: flex-start; }
   .telegram-badge { margin-top: 4px; }
+  .agent-roster { grid-template-columns: 1fr; }
+  .team-principles { grid-template-columns: 1fr; gap: 28px; }
   .demo-tabs { overflow-x: auto; }
   .demo-tabs button { flex: 0 0 auto; }
   .demo-frame,
@@ -2078,4 +2234,9 @@ input:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  .channel-track { animation: none; }
+  .channel-set[aria-hidden="true"] { display: none; }
+  .hero-texture,
+  .web-backdrop img,
+  .closing-section > img { transform: scale(1.05); }
 }

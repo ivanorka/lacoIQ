@@ -66,7 +66,7 @@ function applyLanguage(language) {
 
   currentLanguage = language;
   document.documentElement.lang = language;
-  document.title = language === "hr" ? "Millena IQ | Aplikacija" : "Millena IQ | App";
+  document.title = language === "hr" ? "Millena AI | Aplikacija" : "Millena AI | App";
 
   document.querySelectorAll("[data-hr][data-en]").forEach((element) => {
     const nextText = element.dataset[language];

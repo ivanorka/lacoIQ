@@ -25,8 +25,8 @@ function applySiteLanguage(language) {
   });
 
   document.title = document.body.classList.contains("login-page")
-    ? (siteLanguage === "hr" ? "Prijava | Millena IQ" : "Sign in | Millena IQ")
-    : (siteLanguage === "hr" ? "Millena IQ | Sadržaj koji radi sam" : "Millena IQ | Content that runs itself");
+    ? (siteLanguage === "hr" ? "Prijava | Millena AI" : "Sign in | Millena AI")
+    : (siteLanguage === "hr" ? "Millena AI | Sadržaj koji radi sam" : "Millena AI | Content that runs itself");
 
   refreshSiteIcons();
 }
@@ -50,9 +50,38 @@ navLinks?.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", () => navLinks.classList.remove("open"));
 });
 
-window.addEventListener("scroll", () => {
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const parallaxItems = [
+  { element: document.querySelector(".hero-texture"), section: document.querySelector(".hero-section"), speed: 0.055 },
+  { element: document.querySelector(".web-backdrop img"), section: document.querySelector(".web-section"), speed: 0.09 },
+  { element: document.querySelector(".closing-section > img"), section: document.querySelector(".closing-section"), speed: 0.075 },
+].filter((item) => item.element && item.section);
+
+let motionFrame = 0;
+
+function updatePageMotion() {
+  motionFrame = 0;
   document.querySelector(".site-header")?.classList.toggle("scrolled", window.scrollY > 18);
-}, { passive: true });
+  if (reducedMotion.matches) return;
+
+  const mobileFactor = window.innerWidth < 700 ? 0.55 : 1;
+  parallaxItems.forEach(({ element, section, speed }) => {
+    const bounds = section.getBoundingClientRect();
+    if (bounds.bottom < -120 || bounds.top > window.innerHeight + 120) return;
+    const distanceFromCenter = (window.innerHeight / 2) - (bounds.top + bounds.height / 2);
+    const offset = Math.max(-52, Math.min(52, distanceFromCenter * speed * mobileFactor));
+    element.style.setProperty("--parallax-offset", `${offset.toFixed(1)}px`);
+  });
+}
+
+function requestPageMotion() {
+  if (motionFrame) return;
+  motionFrame = window.requestAnimationFrame(updatePageMotion);
+}
+
+window.addEventListener("scroll", requestPageMotion, { passive: true });
+window.addEventListener("resize", requestPageMotion, { passive: true });
+requestPageMotion();
 
 const revealObserver = "IntersectionObserver" in window
   ? new IntersectionObserver((entries) => {

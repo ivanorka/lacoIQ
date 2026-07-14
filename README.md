@@ -1,7 +1,8 @@
-# Millena IQ
+# Millena AI
 
-Product prototype for automated content operations across social media, blog,
-newsletter and website publishing.
+Product prototype for collaboration between people and AI agents across social
+media, blog, newsletter and website publishing. Millena keeps project context,
+coordinates specialist agents and returns important decisions to the team.
 
 The prototype includes Croatian and English interfaces, with Croatian as the
 default language. It runs as a static app without a build step.
@@ -25,12 +26,13 @@ Planned product domain: `millena.ai`.
 
 ## Files
 
-- `index.html` - public Millena IQ product website
+- `index.html` - public Millena AI product website
 - `login.html` - bilingual sign-in and project entry screen
 - `app.html` - authenticated application screens and product workflows
 - `site.css` / `site.js` - public website and login presentation/behavior
 - `styles.css` - responsive product interface and visual system
 - `script.js` - navigation, onboarding, language switching and interactions
+- `PRODUCT_STRATEGY.md` - product positioning and human + AI operating model
 - `assets/lucide.min.js` - local Lucide icon runtime
 - `assets/millena-mark.svg` - Millena companion brand mark
 - `assets/` - supporting visual assets
