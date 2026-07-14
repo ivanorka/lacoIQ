@@ -243,16 +243,6 @@ input:focus-visible {
   box-shadow: 0 1px 3px rgba(23, 23, 25, 0.08);
 }
 
-.login-link {
-  min-height: 36px;
-  padding: 0 10px;
-  display: inline-flex;
-  align-items: center;
-  color: var(--muted);
-  font-size: 0.76rem;
-  font-weight: 700;
-}
-
 .menu-button {
   display: none;
 }
@@ -2154,8 +2144,7 @@ input:focus-visible {
   h2 { font-size: 2.2rem; }
   .site-section { padding: 82px 18px; }
   .nav-shell { padding-left: 10px; }
-  .nav-actions .site-button,
-  .nav-actions .login-link { display: none; }
+  .nav-actions .site-button { display: none; }
   .nav-actions { margin-right: 44px; }
   .hero-section { min-height: auto; padding: 116px 18px 60px; }
   .hero-copy h1 { font-size: 3.8rem; }
