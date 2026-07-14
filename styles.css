@@ -1231,7 +1231,8 @@ svg {
 .integration-icon.telegram { color: #2477c5; background: #eaf3fc; }
 .mini-channel.youtube { color: #e42323; background: #fff0f0; }
 .mini-channel.x-network { color: #fff; background: #171719; font-size: 0.68rem; font-weight: 850; }
-.mini-channel.reddit { color: #fff; background: #e34b20; font-size: 0.68rem; font-weight: 850; }
+.mini-channel.reddit { background: transparent; }
+.mini-channel.reddit img { width: 30px; height: 30px; display: block; }
 .mini-channel.pinterest { color: #bd081c; background: #fff0f2; }
 .mini-channel.threads { color: #fff; background: #29272d; }
 .mini-channel.mail,
@@ -2562,7 +2563,8 @@ svg {
 .integration-icon.neutral { color: var(--muted); background: #f0f0ed; }
 .integration-icon.youtube { color: #e42323; background: #fff0f0; }
 .integration-icon.x-network { color: #fff; background: #171719; font-size: 0.72rem; font-weight: 850; }
-.integration-icon.reddit { color: #fff; background: #e34b20; font-size: 0.72rem; font-weight: 850; }
+.integration-icon.reddit { flex-basis: 38px; background: transparent; }
+.integration-icon.reddit img { width: 38px; height: 38px; display: block; }
 .integration-icon.pinterest { color: #bd081c; background: #fff0f2; }
 .integration-icon.threads { color: #fff; background: #29272d; }
 .integration-card h3 { margin: 20px 0 5px; font-size: 0.82rem; }

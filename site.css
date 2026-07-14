@@ -892,6 +892,13 @@ input:focus-visible {
   font-weight: 850;
 }
 
+.reddit-mark {
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex: 0 0 16px;
+}
+
 .channel-ribbon svg {
   width: 16px;
 }
@@ -1554,7 +1561,8 @@ input:focus-visible {
   box-shadow: 0 10px 28px rgba(23, 23, 25, 0.08);
 }
 
-.orbit-node svg { width: 17px; }
+.orbit-node svg,
+.orbit-node .reddit-mark { width: 17px; height: 17px; }
 .orbit-node b { font-size: 0.63rem; }
 .orbit-node.whatsapp { left: 5%; top: 18%; color: var(--green); }
 .orbit-node.telegram { right: 5%; top: 16%; color: #2477c5; }
@@ -1589,6 +1597,7 @@ input:focus-visible {
 }
 
 .network-matrix svg { width: 16px; color: var(--ink); }
+.network-matrix .reddit-mark { width: 16px; height: 16px; }
 .network-matrix b { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid currentColor; border-radius: 50%; color: var(--ink); font-size: 0.52rem; }
 
 .web-section {
