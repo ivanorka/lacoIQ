@@ -6,6 +6,7 @@ type Event struct {
 	ID         string         `json:"id"`
 	ProjectID  string         `json:"projectId"`
 	ActorID    *string        `json:"actorId"`
+	ActorName  string         `json:"actorName"`
 	Action     string         `json:"action"`
 	EntityType string         `json:"entityType"`
 	Metadata   map[string]any `json:"metadata"`

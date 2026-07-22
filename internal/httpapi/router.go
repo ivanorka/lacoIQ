@@ -177,7 +177,7 @@ func NewRouter(options RouterOptions) *gin.Engine {
 
 	actionHandler := actions.NewHandler(actions.NewRepository(options.Database))
 	secured.POST("/projects/:projectID/actions", allProjectRoles, actionHandler.Record)
-	secured.GET("/projects/:projectID/actions", manageProjectRoles, requireAuditLog, actionHandler.List)
+	secured.GET("/projects/:projectID/actions", allProjectRoles, requireAuditLog, actionHandler.List)
 
 	registerStaticRoutes(router, options.StaticDir)
 	return router

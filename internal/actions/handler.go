@@ -50,7 +50,9 @@ func (h *Handler) List(c *gin.Context) {
 		writeError(c, http.StatusServiceUnavailable, "database_unavailable", "Database is not configured.")
 		return
 	}
-	events, err := h.repository.List(c.Request.Context(), c.Param("projectID"))
+	user, _ := auth.CurrentUser(c)
+	showAll := auth.ProjectRole(c) == "owner" || auth.ProjectRole(c) == "lead"
+	events, err := h.repository.List(c.Request.Context(), c.Param("projectID"), user.ID, showAll)
 	if err != nil {
 		writeError(c, http.StatusInternalServerError, "internal_error", "Audit events could not be loaded.")
 		return

@@ -5175,7 +5175,7 @@
       "content.deleted": ["trash-2", currentLanguage === "hr" ? "Sadržaj je obrisan" : "Content deleted"],
     };
     const [icon, title] = labels[action] || [action.includes("failed") ? "triangle-alert" : "activity", metadata.label || action.replace(/[._]/g, " ")];
-    const detail = metadata.comment || metadata.reviewer || metadata.label || event.entityType || (currentLanguage === "hr" ? "Aktivnost je spremljena u audit zapis." : "Activity was saved to the audit log.");
+    const detail = [metadata.comment || metadata.reviewer || metadata.label || event.entityType || (currentLanguage === "hr" ? "Aktivnost je spremljena u audit zapis." : "Activity was saved to the audit log."), event.actorName && `${currentLanguage === "hr" ? "Izvršio/la" : "By"}: ${event.actorName}`].filter(Boolean).join(" · ");
     return { icon, title, detail, tone: action.includes("revision") ? "review" : action.includes("failed") ? "failure" : "" };
   }
 
