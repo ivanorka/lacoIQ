@@ -22,6 +22,9 @@ type Config struct {
 	DemoAdminEmail         string
 	DemoAdminName          string
 	DemoAdminPassword      string
+	SuperAdminEmail        string
+	SuperAdminName         string
+	SuperAdminPassword     string
 	AIProvider             string
 	OllamaBaseURL          string
 	OllamaModel            string
@@ -71,6 +74,9 @@ func Load() (Config, error) {
 		DemoAdminEmail:         strings.ToLower(envOrDefault("DEMO_ADMIN_EMAIL", "irena@mpr.hr")),
 		DemoAdminName:          envOrDefault("DEMO_ADMIN_NAME", "Irena"),
 		DemoAdminPassword:      demoPassword,
+		SuperAdminEmail:        strings.ToLower(strings.TrimSpace(os.Getenv("SUPER_ADMIN_EMAIL"))),
+		SuperAdminName:         strings.TrimSpace(os.Getenv("SUPER_ADMIN_NAME")),
+		SuperAdminPassword:     os.Getenv("SUPER_ADMIN_PASSWORD"),
 		AIProvider:             aiProvider,
 		OllamaBaseURL:          envOrDefault("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
 		OllamaModel:            ollamaModel,

@@ -45,6 +45,12 @@ func main() {
 		slog.Error("MPR workspace bootstrap failed", "error", err)
 		os.Exit(1)
 	}
+	if cfg.SuperAdminEmail != "" && cfg.SuperAdminPassword != "" {
+		if err := authRepository.EnsureSuperAdmin(startupContext, cfg.SuperAdminEmail, cfg.SuperAdminName, cfg.SuperAdminPassword); err != nil {
+			slog.Error("super-admin bootstrap failed", "error", err)
+			os.Exit(1)
+		}
+	}
 
 	router := httpapi.NewRouter(httpapi.RouterOptions{
 		Database:       pool,

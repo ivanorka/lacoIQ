@@ -89,6 +89,18 @@ func UserID(c *gin.Context) string {
 	return user.ID
 }
 
+func RequireSuperAdmin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user, ok := CurrentUser(c)
+		if !ok || user.SystemRole != "super_admin" {
+			writeError(c, http.StatusForbidden, "super_admin_required", "System administrator access is required.")
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
 func ProjectRole(c *gin.Context) string {
 	return c.GetString(projectRoleContextKey)
 }
