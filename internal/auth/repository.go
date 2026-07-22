@@ -19,6 +19,47 @@ var ErrSlugConflict = errors.New("project slug already exists")
 var ErrRegistrationPlan = errors.New("registration plan is unavailable")
 var ErrCurrentPasswordInvalid = errors.New("current password is invalid")
 
+func (r *Repository) EnsureSuperAdmin(ctx context.Context, email, displayName, password string) error {
+	if len(password) < 8 {
+		return errors.New("super-admin password must contain at least 8 characters")
+	}
+	if displayName == "" {
+		displayName = "System administrator"
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	if err != nil {
+		return err
+	}
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+	var userID string
+	err = tx.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, status, password_hash, system_role)
+		VALUES (lower($1), $2, 'active', $3, 'super_admin')
+		ON CONFLICT (email) DO UPDATE
+		SET display_name = EXCLUDED.display_name, status = 'active',
+		    system_role = 'super_admin', updated_at = now()
+		RETURNING id::text`, email, displayName, string(hash)).Scan(&userID)
+	if err != nil {
+		return err
+	}
+	var projectID string
+	if err := tx.QueryRow(ctx, `SELECT id::text FROM projects WHERE slug = 'millena-demo'`).Scan(&projectID); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx, `
+		INSERT INTO project_members (project_id, user_id, role, permissions, status)
+		VALUES ($1::uuid, $2::uuid, 'owner', '{"*":true}'::jsonb, 'active')
+		ON CONFLICT (project_id, user_id) DO UPDATE
+		SET role = 'owner', permissions = EXCLUDED.permissions, status = 'active'`, projectID, userID); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
+}
+
 type Repository struct {
 	pool *pgxpool.Pool
 }
@@ -186,9 +227,9 @@ func (r *Repository) Register(ctx context.Context, input RegisterInput) (User, P
 	err = tx.QueryRow(ctx, `
 		INSERT INTO users (email, display_name, status, password_hash)
 		VALUES (lower($1), $2, 'active', $3)
-		RETURNING id::text, email, display_name, status, last_login_at, created_at, updated_at`,
+		RETURNING id::text, email, display_name, status, system_role, last_login_at, created_at, updated_at`,
 		input.Email, input.DisplayName, string(passwordHash)).Scan(
-		&user.ID, &user.Email, &user.DisplayName, &user.Status, &user.LastLoginAt, &user.CreatedAt, &user.UpdatedAt)
+		&user.ID, &user.Email, &user.DisplayName, &user.Status, &user.SystemRole, &user.LastLoginAt, &user.CreatedAt, &user.UpdatedAt)
 	if postgresCode(err) == "23505" {
 		return User{}, ProjectAccess{}, ErrEmailConflict
 	}
@@ -387,9 +428,9 @@ func (r *Repository) ResolveSession(ctx context.Context, token string) (User, er
 		FROM users
 		WHERE session.token_hash = $1 AND session.expires_at > now()
 		  AND users.id = session.user_id AND users.status = 'active'
-		RETURNING users.id::text, users.email, users.display_name, users.status,
+		RETURNING users.id::text, users.email, users.display_name, users.status, users.system_role,
 		          users.last_login_at, users.created_at, users.updated_at`, tokenHash[:]).Scan(
-		&user.ID, &user.Email, &user.DisplayName, &user.Status,
+		&user.ID, &user.Email, &user.DisplayName, &user.Status, &user.SystemRole,
 		&user.LastLoginAt, &user.CreatedAt, &user.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return User{}, ErrNotFound

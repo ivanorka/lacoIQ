@@ -7,6 +7,7 @@ type User struct {
 	Email        string     `json:"email"`
 	DisplayName  string     `json:"displayName"`
 	Status       string     `json:"status"`
+	SystemRole   string     `json:"systemRole"`
 	LastLoginAt  *time.Time `json:"lastLoginAt"`
 	CreatedAt    time.Time  `json:"createdAt"`
 	UpdatedAt    time.Time  `json:"updatedAt"`
