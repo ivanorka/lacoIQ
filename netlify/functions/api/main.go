@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"sync"
 
@@ -106,14 +107,18 @@ func initializeAPI(ctx context.Context) error {
 }
 
 func encodeQuery(multi map[string][]string, single map[string]string) string {
-	values := make([]string, 0)
+	values := url.Values{}
 	for key, entries := range multi {
-		for _, entry := range entries { values = append(values, key+"="+entry) }
+		for _, entry := range entries {
+			values.Add(key, entry)
+		}
 	}
-	if len(values) == 0 {
-		for key, value := range single { values = append(values, key+"="+value) }
+	for key, value := range single {
+		if _, exists := multi[key]; !exists {
+			values.Add(key, value)
+		}
 	}
-	return strings.Join(values, "&")
+	return values.Encode()
 }
 
 func flattenHeaders(headers http.Header) map[string]string {
