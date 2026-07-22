@@ -92,7 +92,13 @@ func initializeAPI(ctx context.Context) error {
 			apiErr = err
 			return
 		}
-		if err := auth.NewRepository(pool).EnsureMPRWorkspace(ctx, cfg.DemoAdminEmail, cfg.DemoAdminName, cfg.DemoAdminPassword); err != nil {
+		authRepository := auth.NewRepository(pool)
+		if err := authRepository.EnsureMPRWorkspace(ctx, cfg.DemoAdminEmail, cfg.DemoAdminName, cfg.DemoAdminPassword); err != nil {
+			pool.Close()
+			apiErr = err
+			return
+		}
+		if err := authRepository.EnsureSuperAdmin(ctx, cfg.SuperAdminEmail, cfg.SuperAdminName, cfg.SuperAdminPassword); err != nil {
 			pool.Close()
 			apiErr = err
 			return
@@ -124,7 +130,9 @@ func encodeQuery(multi map[string][]string, single map[string]string) string {
 func flattenHeaders(headers http.Header) map[string]string {
 	result := make(map[string]string, len(headers))
 	for key, values := range headers {
-		if len(values) > 0 { result[key] = values[0] }
+		if len(values) > 0 {
+			result[key] = values[0]
+		}
 	}
 	return result
 }
