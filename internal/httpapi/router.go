@@ -44,6 +44,7 @@ func NewRouter(options RouterOptions) *gin.Engine {
 	api.GET("/ready", readiness(options.Database))
 
 	authHandler := auth.NewHandler(auth.NewRepository(options.Database), options.SessionTTL, options.CookieSecure)
+	api.GET("/registration-plans", authHandler.RegistrationPlans)
 	api.POST("/auth/register", authHandler.Register)
 	api.POST("/auth/login", authHandler.Login)
 

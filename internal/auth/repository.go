@@ -337,6 +337,23 @@ func isRegistrationPlan(planCode string) bool {
 	return planCode == "starter" || planCode == "optimum" || planCode == "enterprise"
 }
 
+func (r *Repository) ListRegistrationPlans(ctx context.Context) ([]RegistrationPlan, error) {
+	rows, err := r.pool.Query(ctx, `SELECT CASE WHEN code='unlimited' THEN 'enterprise' ELSE code END, name, description, monthly_publication_limit FROM plan_catalog WHERE is_system AND is_active AND code IN ('starter','optimum','unlimited') ORDER BY CASE code WHEN 'starter' THEN 1 WHEN 'optimum' THEN 2 ELSE 3 END`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	plans := []RegistrationPlan{}
+	for rows.Next() {
+		var p RegistrationPlan
+		if err := rows.Scan(&p.Code, &p.Name, &p.Description, &p.MonthlyPublicationLimit); err != nil {
+			return nil, err
+		}
+		plans = append(plans, p)
+	}
+	return plans, rows.Err()
+}
+
 func registrationPlanCatalogCode(planCode string) string {
 	if planCode == "enterprise" {
 		return "unlimited"

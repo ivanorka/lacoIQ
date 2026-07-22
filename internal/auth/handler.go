@@ -28,6 +28,19 @@ func NewHandler(repository *Repository, sessionTTL time.Duration, cookieSecure b
 	return &Handler{repository: repository, sessionTTL: sessionTTL, cookieSecure: cookieSecure}
 }
 
+func (h *Handler) RegistrationPlans(c *gin.Context) {
+	if h.repository == nil {
+		writeError(c, 503, "database_unavailable", "Database is not configured.")
+		return
+	}
+	plans, err := h.repository.ListRegistrationPlans(c.Request.Context())
+	if err != nil {
+		writeError(c, 500, "internal_error", "Plans could not be loaded.")
+		return
+	}
+	c.JSON(200, gin.H{"data": plans})
+}
+
 func (h *Handler) Register(c *gin.Context) {
 	var input RegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {

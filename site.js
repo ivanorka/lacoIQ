@@ -248,6 +248,8 @@ const apiBase = window.location.port === "8000"
   ? `${window.location.protocol}//${window.location.hostname}:8080/api/v1`
   : "/api/v1";
 
+async function loadRegistrationPlans() { const box=document.querySelector("#registration-plan-options"); if(!box)return; try { const plans=await siteAPI("/registration-plans"); box.innerHTML=plans.map((p,i)=>`<label class="registration-plan-card"><input type="radio" name="planCode" value="${p.code}" ${i===0?"checked":""}/><span><strong>${p.name}</strong><small>${p.description || (p.monthlyPublicationLimit == null ? "Neograničeno" : `Do ${p.monthlyPublicationLimit} objava mjesečno`)}</small></span></label>`).join(""); } catch {} }
+
 async function siteAPI(path, options = {}) {
   const response = await fetch(`${apiBase}${path}`, {
     ...options,
@@ -377,4 +379,5 @@ document.querySelector(".password-toggle")?.addEventListener("click", (event) =>
 applyHonestSiteCopy();
 applySiteLanguage("hr");
 setAuthMode("login");
+loadRegistrationPlans();
 refreshSiteIcons();
