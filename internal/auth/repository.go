@@ -39,7 +39,7 @@ func (r *Repository) EnsureSuperAdmin(ctx context.Context, email, displayName, p
 	err = tx.QueryRow(ctx, `
 		INSERT INTO users (email, display_name, status, password_hash, system_role)
 		VALUES (lower($1), $2, 'active', $3, 'super_admin')
-		ON CONFLICT (email) DO UPDATE
+		ON CONFLICT (lower(email)) DO UPDATE
 		SET display_name = EXCLUDED.display_name, status = 'active',
 		    system_role = 'super_admin', updated_at = now()
 		RETURNING id::text`, email, displayName, string(hash)).Scan(&userID)
