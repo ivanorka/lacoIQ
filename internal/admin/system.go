@@ -28,6 +28,9 @@ func (h *SystemHandler) Users(c *gin.Context) {
 			writeError(c, 500, "internal_error", "Users could not be loaded.")
 			return
 		}
+		if status == "disabled" {
+			status = "suspended"
+		}
 		result = append(result, gin.H{"id": id, "email": email, "displayName": name, "status": status, "systemRole": role, "createdAt": created})
 	}
 	c.JSON(http.StatusOK, gin.H{"data": result})
@@ -50,11 +53,18 @@ func (h *SystemHandler) UpdateUser(c *gin.Context) {
 		writeError(c, 422, "validation_error", "Invalid system role.")
 		return
 	}
+	databaseStatus := input.Status
+	if databaseStatus == "suspended" {
+		databaseStatus = "disabled"
+	}
 	var id, email, name, status, role string
-	err := h.pool.QueryRow(c, `UPDATE users SET display_name=$2,status=$3,system_role=$4,updated_at=now() WHERE id=$1::uuid RETURNING id::text,email,display_name,status,system_role`, c.Param("userID"), strings.TrimSpace(input.DisplayName), input.Status, input.SystemRole).Scan(&id, &email, &name, &status, &role)
+	err := h.pool.QueryRow(c, `UPDATE users SET display_name=$2,status=$3,system_role=$4,updated_at=now() WHERE id=$1::uuid RETURNING id::text,email,display_name,status,system_role`, c.Param("userID"), strings.TrimSpace(input.DisplayName), databaseStatus, input.SystemRole).Scan(&id, &email, &name, &status, &role)
 	if err != nil {
 		writeError(c, 404, "not_found", "User was not found.")
 		return
+	}
+	if status == "disabled" {
+		status = "suspended"
 	}
 	c.JSON(200, gin.H{"data": gin.H{"id": id, "email": email, "displayName": name, "status": status, "systemRole": role}})
 }
@@ -74,7 +84,11 @@ func (h *SystemHandler) BulkUserStatus(c *gin.Context) {
 			return
 		}
 	}
-	result, err := h.pool.Exec(c, `UPDATE users SET status=$2, updated_at=now() WHERE id = ANY($1::uuid[])`, input.UserIDs, input.Status)
+	databaseStatus := input.Status
+	if databaseStatus == "suspended" {
+		databaseStatus = "disabled"
+	}
+	result, err := h.pool.Exec(c, `UPDATE users SET status=$2, updated_at=now() WHERE id = ANY($1::uuid[])`, input.UserIDs, databaseStatus)
 	if err != nil {
 		writeError(c, 422, "validation_error", "One or more user IDs are invalid.")
 		return
