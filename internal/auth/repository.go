@@ -347,10 +347,10 @@ func registrationPlanCatalogCode(planCode string) string {
 func (r *Repository) Authenticate(ctx context.Context, email, password string) (User, error) {
 	var user User
 	err := r.pool.QueryRow(ctx, `
-		SELECT id::text, email, display_name, status, password_hash, last_login_at, created_at, updated_at
+		SELECT id::text, email, display_name, status, system_role, password_hash, last_login_at, created_at, updated_at
 		FROM users
 		WHERE lower(email) = lower($1) AND status = 'active'`, email).Scan(
-		&user.ID, &user.Email, &user.DisplayName, &user.Status, &user.PasswordHash,
+		&user.ID, &user.Email, &user.DisplayName, &user.Status, &user.SystemRole, &user.PasswordHash,
 		&user.LastLoginAt, &user.CreatedAt, &user.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return User{}, ErrNotFound
