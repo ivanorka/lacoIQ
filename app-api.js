@@ -4979,6 +4979,11 @@
     const canPublish = projectRoleAllows("owner", "lead", "editor");
     const canManage = projectRoleAllows("owner", "lead");
     const isOwner = projectRoleAllows("owner");
+    const projectAccessSection = document.querySelector("#team-list")?.closest(".settings-section");
+    if (projectAccessSection) {
+      projectAccessSection.hidden = !canManage;
+      projectAccessSection.setAttribute("aria-hidden", String(!canManage));
+    }
     const roleCopy = currentLanguage === "hr"
       ? `Uloga „${projectAccess.role}” nema dopuštenje za ovu promjenu.`
       : `The “${projectAccess.role}” role cannot make this change.`;
@@ -5031,19 +5036,6 @@
       editor.classList.toggle("permission-readonly", !canPublish);
       if (!canPublish) editor.title = roleCopy;
     });
-
-    if (!canManage) {
-      const teamList = document.querySelector("#team-list");
-      if (teamList && !teamMembers.length) {
-        teamList.replaceChildren();
-        const message = document.createElement("p");
-        message.className = "content-empty";
-        message.textContent = currentLanguage === "hr"
-          ? "Popis tima dostupan je administratoru i voditelju projekta."
-          : "The team list is available to project administrators and leads.";
-        teamList.append(message);
-      }
-    }
 
     const rawSocialLimit = entitlement?.features?.socialChannels;
     const socialLimit = rawSocialLimit === "all" ? Number.POSITIVE_INFINITY : Number(rawSocialLimit);
